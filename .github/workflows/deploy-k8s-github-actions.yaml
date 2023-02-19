@@ -2,7 +2,7 @@ name: Build and Push Docker image to Docker Hub
 
 on: push
 jobs:
-  push_to_registry:
+  push_to_dockerhub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
@@ -27,3 +27,17 @@ jobs:
           context: .
           push: true
           tags: devopshint/node-app:latest
+          
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Create kubeconfig
+      run: |
+        mkdir ${HOME}/.kube
+        echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
+        cat ${HOME}/.kube/config
+    - name: Deploy to K8s
+      run: kubectl apply -f k8s-node-app.yaml         

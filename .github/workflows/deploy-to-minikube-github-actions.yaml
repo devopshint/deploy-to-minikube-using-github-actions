@@ -1,6 +1,7 @@
 name: Deploy to Minikube using GitHub Actions
-on:
-  - pull_request
+
+on: [push]
+  
 jobs:
   job1:
     runs-on: ubuntu-latest

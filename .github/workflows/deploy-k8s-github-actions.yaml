@@ -32,12 +32,7 @@ jobs:
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Create kubeconfig
-      run: |
-        mkdir ${HOME}/.kube
-        echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
-        cat ${HOME}/.kube/config
-    - name: Deploy to K8s
-      run: kubectl apply -f k8s-node-app.yaml         
+    - uses: actions/checkout@v2
+      with:
+        base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+    -  run: kubectl apply -f k8s-node-app.yaml         

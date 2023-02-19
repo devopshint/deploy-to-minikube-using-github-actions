@@ -1,32 +1,27 @@
 name: Deploy to Minikube using GitHub Actions
-on: [push]
-
+on:
+  - pull_request
 jobs:
-  minikube:
-    name: Minikube-Kubernetes Cluster interaction
+  job1:
     runs-on: ubuntu-latest
+    name: build Node.js Docker Image and deploy to minikube
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Minikube
-        uses: manusa/actions-setup-minikube@v2.7.2
-        with:
-          minikube version: 'v1.28.0'
-          kubernetes version: 'v1.25.4'
-          github token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Interact with the cluster
-        run: kubectl get nodes
-      - name: Build image
-        run: |
+    - uses: actions/checkout@v2
+    - name: Start minikube
+      uses: medyagh/setup-minikube@master
+    - name: Try the cluster !
+      run: kubectl get pods -A
+    - name: Build image
+      run: |
           export SHELL=/bin/bash
           docker build -f ./Dockerfile -t devopshint/node-app:latest .
           echo -n "verifying images:"
           docker images         
-      - name: Deploy to minikube
-        run:
-          kubectl apply -f k8s-node-app.yaml
-      - name: Test service URLs
-        run: |
+    - name: Deploy to minikube
+      run:
+        kubectl apply -f k8s-node-app.yaml
+    - name: Test service URLs
+      run: |
           minikube service list
           minikube service nodejs-app --url
           echo "------------------opening the service------------------"

@@ -2,8 +2,8 @@ name: Deploy to Minikube using GitHub Actions
 on: [push]
 
 jobs:
-  example:
-    name: Example Minikube-Kubernetes Cluster interaction
+  minikube:
+    name: Minikube-Kubernetes Cluster interaction
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

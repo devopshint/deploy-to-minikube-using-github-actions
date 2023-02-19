@@ -30,7 +30,7 @@ metadata:
 spec:
   selector:
     app: nodejs-app
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - name: http
     targetPort: 3000
